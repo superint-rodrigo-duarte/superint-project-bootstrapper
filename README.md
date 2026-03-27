@@ -50,9 +50,9 @@ dotnet run
 
 ### 3. Configure Credentials
 
-The application has a built-in **Secrets Manager** where you can configure all service credentials directly from the UI. Alternatively, you can use configuration files or environment variables.
+The application has a built-in **Secrets Manager** where you can configure all service credentials directly from the UI. Alternatively, you can use configuration files.
 
-#### Option A: Configuration File
+#### Configuration File
 
 Create an `appsettings.local.json` file in the `superint.ProjectBootstrapper.UI` directory:
 
@@ -125,17 +125,6 @@ Create an `appsettings.local.json` file in the `superint.ProjectBootstrapper.UI`
 ```
 
 > `appsettings.local.json` is git-ignored and will never be committed.
-
-#### Option B: Environment Variables
-
-Use the `PROJINIT_` prefix with `__` as section separator:
-
-```bash
-export PROJINIT_Git__BaseUrl="https://api.github.com"
-export PROJINIT_Git__ApiToken="ghp_your_token_here"
-export PROJINIT_Jenkins__BaseUrl="https://jenkins.example.com"
-# ... etc
-```
 
 ## Application Sections
 
