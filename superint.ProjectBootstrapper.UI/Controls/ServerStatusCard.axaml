@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:superint.ProjectBootstrapper.UI.Controls"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350"
+             x:Class="superint.ProjectBootstrapper.UI.Controls.ServerStatusCard">
+
+    <Border Background="{DynamicResource Layer2BackgroundBrush}"
+            CornerRadius="12"
+            Padding="20">
+        <StackPanel Spacing="16">
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border x:Name="BadgeBorder" CornerRadius="4" Padding="8,4">
+                    <TextBlock x:Name="BadgeText" FontWeight="SemiBold" Foreground="White" FontSize="12"/>
+                </Border>
+                <TextBlock x:Name="TitleText"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextBrush}"/>
+            </StackPanel>
+
+            <TextBlock x:Name="StatusText"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       FontSize="12"/>
+
+            <!-- Gauges Row -->
+            <Grid ColumnDefinitions="*,*,*" Margin="0,8,0,0">
+                <local:GaugeDisplay x:Name="CpuGauge" Grid.Column="0" Label="{x:Static strings:UIStrings+Dashboard.Cpu}" Unit="%"/>
+                <local:GaugeDisplay x:Name="MemoryGauge" Grid.Column="1" Label="{x:Static strings:UIStrings+Dashboard.Memory}" Unit="%"/>
+                <local:GaugeDisplay x:Name="DiskGauge" Grid.Column="2" Label="{x:Static strings:UIStrings+Dashboard.Disk}" Unit="%"/>
+            </Grid>
+
+            <!-- Details -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                    CornerRadius="6"
+                    Padding="12,8"
+                    Margin="0,8,0,0">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static strings:UIStrings+Dashboard.Cpu}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBlock x:Name="CpuDetailsText" Grid.Row="0" Grid.Column="1" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static strings:UIStrings+Dashboard.Memory}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+                    <TextBlock x:Name="MemoryDetailsText" Grid.Row="1" Grid.Column="1" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static strings:UIStrings+Dashboard.Disk}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+                    <TextBlock x:Name="DiskDetailsText" Grid.Row="2" Grid.Column="1" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static strings:UIStrings+Dashboard.Uptime}" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+                    <TextBlock x:Name="UptimeText" Grid.Row="3" Grid.Column="1" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

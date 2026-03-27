@@ -1,0 +1,223 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="600"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardJenkinsStepView"
+             x:DataType="vm:WizardJenkinsStepViewModel">
+
+    <StackPanel Spacing="16">
+        <!-- Header with Toggle -->
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="Jenkins Pipeline"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextBrush}"/>
+            <ToggleSwitch Grid.Column="1"
+                          IsChecked="{Binding IsEnabled}"
+                          OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                          OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+        </Grid>
+
+        <!-- Form Fields -->
+        <StackPanel Spacing="12" IsEnabled="{Binding IsEnabled}">
+            <Grid ColumnDefinitions="*,16,*">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="Base Folder" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding Folder}" Watermark="(optional)"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="4">
+                    <TextBlock Text="Project Folder Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding ProjectFolderName}" Watermark="e.g., my-project"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Spacing="4" IsVisible="{Binding ShowBackendPipeline}">
+                <TextBlock Text="Backend Pipeline Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                <TextBox Text="{Binding BackendPipelineName}" Watermark="backend"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4" IsVisible="{Binding ShowFrontendPipeline}">
+                <TextBlock Text="Frontend Pipeline Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                <TextBox Text="{Binding FrontendPipelineName}" Watermark="frontend"/>
+            </StackPanel>
+
+            <!-- Git Credentials Section -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="16" Margin="0,8,0,0">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Git Credentials" FontSize="14" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+
+                    <!-- Git Token Credentials ID (shared, always visible) -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Git Credentials ID (Token Auth)" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBox Text="{Binding GitCredentialsId}" Watermark="GitHub-Token-superint-CICD"/>
+                    </StackPanel>
+
+                    <!-- Git URL ID Prefix -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Git URL ID Prefix" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBox Text="{Binding GitUrlIdPrefix}" Watermark="GitHub-URL-"/>
+                    </StackPanel>
+
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <!-- Backend Git URL Credential (Backend-only or Fullstack) -->
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <Border Background="{DynamicResource Layer0BackgroundBrush}" CornerRadius="6" Padding="12"
+                            IsVisible="{Binding ShowBackendPipeline}">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <!-- Fullstack: show "(Backend)" label -->
+                                <TextBlock Text="Git URL Credential (Backend)"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding IsFullstack}"/>
+                                <!-- Single-stack backend: no suffix -->
+                                <TextBlock Text="Git URL Credential"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding IsSingleRepo}"/>
+                                <ToggleSwitch Grid.Column="1"
+                                              IsChecked="{Binding CreateGitCredentialBackend}"
+                                              OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                                              OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+                            </Grid>
+
+                            <!-- Create: show preview of generated ID -->
+                            <StackPanel Spacing="2" IsVisible="{Binding ShowBackendCredentialCreate}">
+                                <TextBlock Text="Will create:" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBlock FontSize="12" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}"
+                                           IsVisible="{Binding IsSingleRepo}"
+                                           Text="{Binding SingleCredentialIdPreview}"/>
+                                <TextBlock FontSize="12" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}"
+                                           IsVisible="{Binding IsFullstack}"
+                                           Text="{Binding BackendCredentialIdPreview}"/>
+                            </StackPanel>
+
+                            <!-- Skip: TextBox for existing ID -->
+                            <StackPanel Spacing="4" IsVisible="{Binding ShowBackendCredentialSkip}">
+                                <TextBlock Text="Existing Credential ID" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ExistingGitUrlIdBackend}" FontSize="12" FontFamily="Consolas"
+                                         Watermark="e.g., GitHub-URL-my-project-backend"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <!-- Frontend Git URL Credential (Fullstack only) -->
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <Border Background="{DynamicResource Layer0BackgroundBrush}" CornerRadius="6" Padding="12"
+                            IsVisible="{Binding IsFullstack}">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Text="Git URL Credential (Frontend)"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Center"/>
+                                <ToggleSwitch Grid.Column="1"
+                                              IsChecked="{Binding CreateGitCredentialFrontend}"
+                                              OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                                              OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+                            </Grid>
+
+                            <!-- Create: show preview of generated ID -->
+                            <StackPanel Spacing="2" IsVisible="{Binding ShowFrontendCredentialCreate}">
+                                <TextBlock Text="Will create:" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBlock FontSize="12" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}"
+                                           Text="{Binding FrontendCredentialIdPreview}"/>
+                            </StackPanel>
+
+                            <!-- Skip: TextBox for existing ID -->
+                            <StackPanel Spacing="4" IsVisible="{Binding ShowFrontendCredentialSkip}">
+                                <TextBlock Text="Existing Credential ID" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ExistingGitUrlIdFrontend}" FontSize="12" FontFamily="Consolas"
+                                         Watermark="e.g., GitHub-URL-my-project-frontend"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <!-- Frontend-only Git URL Credential (Frontend type only, not Fullstack) -->
+                    <!-- ══════════════════════════════════════════════════ -->
+                    <Border Background="{DynamicResource Layer0BackgroundBrush}" CornerRadius="6" Padding="12"
+                            IsVisible="{Binding ShowFrontendOnlyCredential}">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Text="Git URL Credential"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Center"/>
+                                <ToggleSwitch Grid.Column="1"
+                                              IsChecked="{Binding CreateGitCredentialFrontend}"
+                                              OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                                              OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+                            </Grid>
+
+                            <!-- Create: show preview of generated ID -->
+                            <StackPanel Spacing="2" IsVisible="{Binding ShowFrontendCredentialCreate}">
+                                <TextBlock Text="Will create:" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBlock FontSize="12" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}"
+                                           Text="{Binding SingleCredentialIdPreview}"/>
+                            </StackPanel>
+
+                            <!-- Skip: TextBox for existing ID -->
+                            <StackPanel Spacing="4" IsVisible="{Binding ShowFrontendCredentialSkip}">
+                                <TextBlock Text="Existing Credential ID" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ExistingGitUrlIdFrontend}" FontSize="12" FontFamily="Consolas"
+                                         Watermark="e.g., GitHub-URL-my-project"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Git Repository Info (shown when Git repo creation is disabled) -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                    CornerRadius="8"
+                    Padding="16"
+                    Margin="0,8,0,0"
+                    IsVisible="{Binding ShowGitUrlInfo}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Git Repository URLs" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock Text="Git repo creation is disabled. The URLs below are from the Git step and will be used for Jenkins credentials."
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               FontSize="12"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Single repo URL -->
+                    <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas"
+                               IsVisible="{Binding IsSingleRepo}">
+                        <Run Text="URL: " Foreground="{DynamicResource TextMutedBrush}"/>
+                        <Run Text="{Binding GitRepoUrl, TargetNullValue='(not provided)'}"/>
+                    </TextBlock>
+
+                    <!-- Fullstack repo URLs -->
+                    <StackPanel Spacing="2" IsVisible="{Binding IsFullstack}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas">
+                            <Run Text="Backend:  " Foreground="{DynamicResource TextMutedBrush}"/>
+                            <Run Text="{Binding BackendGitUrl, TargetNullValue='(not provided)'}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas">
+                            <Run Text="Frontend: " Foreground="{DynamicResource TextMutedBrush}"/>
+                            <Run Text="{Binding FrontendGitUrl, TargetNullValue='(not provided)'}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Disabled Message -->
+        <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                CornerRadius="8"
+                Padding="16"
+                IsVisible="{Binding !IsEnabled}">
+            <TextBlock Text="Jenkins pipeline creation is disabled. You will need to create the pipeline manually."
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       TextWrapping="Wrap"/>
+        </Border>
+    </StackPanel>
+</UserControl>

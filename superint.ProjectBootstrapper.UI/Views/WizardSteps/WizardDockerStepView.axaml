@@ -1,0 +1,195 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="800"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardDockerStepView"
+             x:DataType="vm:WizardDockerStepViewModel">
+
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <!-- Header with Toggle -->
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="{x:Static strings:UIStrings+Services.DockerCompose}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextBrush}"/>
+                <ToggleSwitch Grid.Column="1"
+                              IsChecked="{Binding IsEnabled}"
+                              OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                              OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+            </Grid>
+
+            <!-- Form Fields -->
+            <StackPanel Spacing="16" IsVisible="{Binding IsEnabled}">
+
+                <!-- Basic Settings -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Deploy Folder Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding DeployFolderName}" Watermark="e.g., my-project"/>
+                </StackPanel>
+
+                <!-- Container Names -->
+                <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Container Names" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+
+                        <!-- Fullstack: Two columns -->
+                        <Grid ColumnDefinitions="*,16,*" IsVisible="{Binding IsFullstack}">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Frontend Container" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ContainerNameFrontend}" Watermark="my-project-frontend"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Text="Backend Container" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ContainerNameBackend}" Watermark="my-project-backend"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Frontend only: Single column -->
+                        <StackPanel Spacing="4" IsVisible="{Binding IsFrontendOnly}">
+                            <TextBlock Text="Frontend Container" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding ContainerNameFrontend}" Watermark="my-project-frontend"/>
+                        </StackPanel>
+
+                        <!-- Backend only: Single column -->
+                        <StackPanel Spacing="4" IsVisible="{Binding IsBackendOnly}">
+                            <TextBlock Text="Backend Container" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding ContainerNameBackend}" Watermark="my-project-backend"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- STG Environment -->
+                <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="16">
+                    <StackPanel Spacing="12">
+                        <Border Background="#3B82F6" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left">
+                            <TextBlock Text="{x:Static strings:UIStrings+Environments.Staging}" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
+                        </Border>
+
+                        <!-- Deploy Options -->
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <CheckBox Content="Deploy to server" IsChecked="{Binding DeployToStg}"/>
+                            <CheckBox Content="Copy to local folder" IsChecked="{Binding CopyToLocalStg}"/>
+                        </StackPanel>
+
+                        <!-- Row: ReverseProxy Host + ReverseProxy Path Prefix (for non-fullstack) -->
+                        <Grid ColumnDefinitions="*,16,*" IsVisible="{Binding !IsFullstack}">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="ReverseProxy Host" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyHostStg}" Watermark="systems-stg.example.com"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding IsFrontendOnly}">
+                                <TextBlock Text="ReverseProxy Path Prefix" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixStg}" Watermark="/my-project"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding IsBackendOnly}">
+                                <TextBlock Text="ReverseProxy Path Prefix (API)" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixApiStg}" Watermark="/my-project/api"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Fullstack: 3 columns (Host + Frontend Path + API Path) -->
+                        <Grid ColumnDefinitions="*,16,*,16,*" IsVisible="{Binding IsFullstack}">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="ReverseProxy Host" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyHostStg}" Watermark="systems-stg.example.com"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Text="ReverseProxy Path Prefix" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixStg}" Watermark="/my-project"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Spacing="4">
+                                <TextBlock Text="ReverseProxy Path Prefix (API)" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixApiStg}" Watermark="/my-project/api"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Strip Prefix Options -->
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <CheckBox Content="Strip prefix (Frontend)" IsChecked="{Binding UseStripPrefixFrontendStg}" IsVisible="{Binding ShowFrontendOptions}"/>
+                            <CheckBox Content="Strip prefix (Backend)" IsChecked="{Binding UseStripPrefixBackendStg}" IsVisible="{Binding ShowBackendOptions}"/>
+                        </StackPanel>
+
+                        <!-- Local Folder Path (last row) -->
+                        <StackPanel Spacing="4" IsVisible="{Binding CopyToLocalStg}">
+                            <TextBlock Text="Local Folder Path" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding LocalPathStg}" Watermark="C:\Server\stg\compose\..."/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- PRD Environment -->
+                <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="16">
+                    <StackPanel Spacing="12">
+                        <Border Background="#EF4444" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left">
+                            <TextBlock Text="{x:Static strings:UIStrings+Environments.Production}" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
+                        </Border>
+
+                        <!-- Deploy Options -->
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <CheckBox Content="Deploy to server" IsChecked="{Binding DeployToPrd}"/>
+                            <CheckBox Content="Copy to local folder" IsChecked="{Binding CopyToLocalPrd}"/>
+                        </StackPanel>
+
+                        <!-- Row: ReverseProxy Host + ReverseProxy Path Prefix (for non-fullstack) -->
+                        <Grid ColumnDefinitions="*,16,*" IsVisible="{Binding !IsFullstack}">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="ReverseProxy Host" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyHostPrd}" Watermark="systems.example.com"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding IsFrontendOnly}">
+                                <TextBlock Text="ReverseProxy Path Prefix" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixPrd}" Watermark="/my-project"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding IsBackendOnly}">
+                                <TextBlock Text="ReverseProxy Path Prefix (API)" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixApiPrd}" Watermark="/my-project/api"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Fullstack: 3 columns (Host + Frontend Path + API Path) -->
+                        <Grid ColumnDefinitions="*,16,*,16,*" IsVisible="{Binding IsFullstack}">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="ReverseProxy Host" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyHostPrd}" Watermark="systems.example.com"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Text="ReverseProxy Path Prefix" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixPrd}" Watermark="/my-project"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Spacing="4">
+                                <TextBlock Text="ReverseProxy Path Prefix (API)" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBox Text="{Binding ReverseProxyPathPrefixApiPrd}" Watermark="/my-project/api"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Strip Prefix Options -->
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <CheckBox Content="Strip prefix (Frontend)" IsChecked="{Binding UseStripPrefixFrontendPrd}" IsVisible="{Binding ShowFrontendOptions}"/>
+                            <CheckBox Content="Strip prefix (Backend)" IsChecked="{Binding UseStripPrefixBackendPrd}" IsVisible="{Binding ShowBackendOptions}"/>
+                        </StackPanel>
+
+                        <!-- Local Folder Path (last row) -->
+                        <StackPanel Spacing="4" IsVisible="{Binding CopyToLocalPrd}">
+                            <TextBlock Text="Local Folder Path" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding LocalPathPrd}" Watermark="C:\Server\prd\compose\..."/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Disabled Message -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                    CornerRadius="8"
+                    Padding="16"
+                    IsVisible="{Binding !IsEnabled}">
+                <TextBlock Text="Docker Compose generation is disabled. No docker-compose files will be created."
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

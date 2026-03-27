@@ -1,0 +1,6 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder">
+  <displayName>{{ display_name }}</displayName>
+  <description>{{ description }}</description>
+  <properties/>
+</com.cloudbees.hudson.plugins.folder.Folder>

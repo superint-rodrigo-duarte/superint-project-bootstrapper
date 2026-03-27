@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardBasicInfoStepView"
+             x:DataType="vm:WizardBasicInfoStepViewModel">
+
+    <StackPanel Spacing="16">
+        <TextBlock Text="{x:Static strings:UIStrings+WizardFields.BasicInformation}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextBrush}"
+                   Margin="0,0,0,8"/>
+
+        <!-- Project Name -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Project Name *" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <TextBox Text="{Binding ProjectName}" Watermark="e.g., My Project"/>
+        </StackPanel>
+
+        <!-- Description -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="{x:Static strings:UIStrings+Labels.Description}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <TextBox Text="{Binding Description}"
+                     Watermark="Brief description of the project"
+                     AcceptsReturn="True"
+                     Height="80"
+                     TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- Project Type -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Project Type *" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <ComboBox SelectedItem="{Binding Type}"
+                      ItemsSource="{Binding ProjectTypes}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <!-- Backend Language -->
+        <StackPanel Spacing="4" IsVisible="{Binding ShowBackendOptions}">
+            <TextBlock Text="Backend Language" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <ComboBox SelectedItem="{Binding BackendLanguage}"
+                      ItemsSource="{Binding Languages}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <!-- Frontend Language -->
+        <StackPanel Spacing="4" IsVisible="{Binding ShowFrontendOptions}">
+            <TextBlock Text="Frontend Language" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <ComboBox SelectedItem="{Binding FrontendLanguage}"
+                      ItemsSource="{Binding Languages}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <!-- .NET Project Name -->
+        <StackPanel Spacing="4" IsVisible="{Binding ShowDotNetOptions}">
+            <TextBlock Text=".NET Project Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <TextBox Text="{Binding DotNetProjectName}" Watermark="e.g., MyCompany.MyProject"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

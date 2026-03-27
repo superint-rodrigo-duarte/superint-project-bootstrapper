@@ -1,0 +1,107 @@
+pipeline {
+    agent any
+    
+    environment {
+        HARBOR_REGISTRY = '{{HARBOR_REGISTRY}}'
+        IMAGE_NAME = '{{IMAGE_NAME}}'
+        HARBOR_CREDENTIALS = credentials('harbor-credentials')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    docker.build("${HARBOR_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'dotnet test --no-restore --verbosity normal'
+            }
+        }
+        
+        stage('Push to Harbor') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps {
+                script {
+                    docker.withRegistry("https://${HARBOR_REGISTRY}", 'harbor-credentials') {
+                        def image = docker.image("${HARBOR_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                        image.push()
+                        
+                        if (env.BRANCH_NAME == 'main') {
+                            image.push('latest')
+                        } else if (env.BRANCH_NAME == 'develop') {
+                            image.push('develop')
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to HML') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    sshagent(['hml-server-credentials']) {
+                        sh '''
+                            ssh user@hml-server "
+                                cd /opt/apps/{{PROJECT_SLUG}} &&
+                                docker-compose -f docker-compose.hml.yml pull &&
+                                docker-compose -f docker-compose.hml.yml up -d
+                            "
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to PRD') {
+            when {
+                branch 'main'
+            }
+            steps {
+                input message: 'Deploy to Production?', ok: 'Deploy'
+                script {
+                    sshagent(['prd-server-credentials']) {
+                        sh '''
+                            ssh user@prd-server "
+                                cd /opt/apps/{{PROJECT_SLUG}} &&
+                                docker-compose -f docker-compose.prd.yml pull &&
+                                docker-compose -f docker-compose.prd.yml up -d
+                            "
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        failure {
+            echo 'Pipeline failed!'
+            // Add notification here (Slack, email, etc.)
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+    }
+}

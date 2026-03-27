@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="100"
+             x:Class="superint.ProjectBootstrapper.UI.Controls.GaugeControl"
+             x:Name="Root">
+
+    <Grid>
+        <!-- Gauge Arc Background -->
+        <Canvas Width="100" Height="60" HorizontalAlignment="Center">
+            <!-- Background Arc (gray) -->
+            <Path Stroke="{DynamicResource Layer1BackgroundBrush}"
+                  StrokeThickness="8"
+                  StrokeLineCap="Round">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="10,50">
+                            <ArcSegment Point="90,50"
+                                        Size="40,40"
+                                        SweepDirection="Clockwise"
+                                        IsLargeArc="True"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+        </Canvas>
+
+        <!-- Value and Label -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <TextBlock Text="{Binding Value, ElementName=Root, StringFormat={}{0:F0}%}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextBrush}"/>
+            <TextBlock Text="{Binding Label, ElementName=Root}"
+                       FontSize="11"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource TextMutedBrush}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

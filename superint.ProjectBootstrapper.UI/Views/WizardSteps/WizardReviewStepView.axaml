@@ -1,0 +1,199 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="700"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardReviewStepView"
+             x:DataType="vm:WizardReviewStepViewModel">
+
+    <StackPanel Spacing="16">
+        <TextBlock Text="{x:Static strings:UIStrings+WizardFields.ConfigurationReview}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextBrush}"
+                   Margin="0,0,0,8"/>
+
+        <TextBlock Text="{x:Static strings:UIStrings+Messages.PleaseReview}"
+                   Foreground="{DynamicResource TextMutedBrush}"
+                   Margin="0,0,0,16"/>
+
+        <!-- Summary Cards -->
+        <StackPanel Spacing="8">
+            <!-- Git -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="Auto,8,*,Auto">
+                        <Panel Grid.Column="0" Width="8" Height="8">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" IsVisible="{Binding WillCreateGit}"/>
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#6B7280" IsVisible="{Binding !WillCreateGit}"/>
+                        </Panel>
+                        <TextBlock Grid.Column="2" Text="Git Repository" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding GitStatusText}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   FontSize="12"/>
+                    </Grid>
+                    <StackPanel Spacing="2" Margin="16,0,0,0" IsVisible="{Binding WillCreateGit}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="Namespace: "/><Run Text="{Binding GitNamespace}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding IsSingleRepo}">
+                            <Run Text="Repo: "/><Run Text="{Binding GitRepoName}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding IsFullstack}">
+                            <Run Text="Backend: "/><Run Text="{Binding BackendRepoName}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding IsFullstack}">
+                            <Run Text="Frontend: "/><Run Text="{Binding FrontendRepoName}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Container Registry -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="Auto,8,*,Auto">
+                        <Panel Grid.Column="0" Width="8" Height="8">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" IsVisible="{Binding WillCreateRegistry}"/>
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#6B7280" IsVisible="{Binding !WillCreateRegistry}"/>
+                        </Panel>
+                        <TextBlock Grid.Column="2" Text="Container Registry" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding RegistryStatusText}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   FontSize="12"/>
+                    </Grid>
+                    <!-- Always show paths (even when Skip — they are used by Docker/Jenkins) -->
+                    <StackPanel Spacing="2" Margin="16,0,0,0">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="Project: "/><Run Text="{Binding RegistryProjectName}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowBackendPaths}">
+                            <Run Text="Backend STG: "/><Run Text="{Binding RegistryPathBackendStg}" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowBackendPaths}">
+                            <Run Text="Backend PRD: "/><Run Text="{Binding RegistryPathBackendPrd}" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowFrontendPaths}">
+                            <Run Text="Frontend STG: "/><Run Text="{Binding RegistryPathFrontendStg}" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowFrontendPaths}">
+                            <Run Text="Frontend PRD: "/><Run Text="{Binding RegistryPathFrontendPrd}" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Jenkins -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="Auto,8,*,Auto">
+                        <Panel Grid.Column="0" Width="8" Height="8">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" IsVisible="{Binding WillCreateJenkins}"/>
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#6B7280" IsVisible="{Binding !WillCreateJenkins}"/>
+                        </Panel>
+                        <TextBlock Grid.Column="2" Text="Jenkins Pipeline" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding JenkinsStatusText}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   FontSize="12"/>
+                    </Grid>
+                    <StackPanel Spacing="2" Margin="16,0,0,0" IsVisible="{Binding WillCreateJenkins}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="Folder: "/><Run Text="{Binding JenkinsFolderPath}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowBackendPipeline}">
+                            <Run Text="Backend: "/><Run Text="{Binding JenkinsBackendPipeline}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowFrontendPipeline}">
+                            <Run Text="Frontend: "/><Run Text="{Binding JenkinsFrontendPipeline}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowBackendPipeline}">
+                            <Run Text="Git cred (Backend): "/><Run Text="{Binding JenkinsGitCredStatusBackend}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowFrontendPipeline}">
+                            <Run Text="Git cred (Frontend): "/><Run Text="{Binding JenkinsGitCredStatusFrontend}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Database -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="Auto,8,*,Auto">
+                        <Panel Grid.Column="0" Width="8" Height="8">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" IsVisible="{Binding WillCreateDatabase}"/>
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#6B7280" IsVisible="{Binding !WillCreateDatabase}"/>
+                        </Panel>
+                        <TextBlock Grid.Column="2" Text="Database (PostgreSQL)" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding DatabaseStatusText}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   FontSize="12"/>
+                    </Grid>
+                    <StackPanel Spacing="2" Margin="16,0,0,0" IsVisible="{Binding WillCreateDatabase}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding CreateInStg}">
+                            <Run Text="STG: "/><Run Text="{Binding DatabaseUserStg}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding CreateInPrd}">
+                            <Run Text="PRD: "/><Run Text="{Binding DatabaseUserPrd}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Docker -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="Auto,8,*,Auto">
+                        <Panel Grid.Column="0" Width="8" Height="8">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" IsVisible="{Binding WillCreateDocker}"/>
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#6B7280" IsVisible="{Binding !WillCreateDocker}"/>
+                        </Panel>
+                        <TextBlock Grid.Column="2" Text="Docker Compose" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding DockerStatusText}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   FontSize="12"/>
+                    </Grid>
+                    <StackPanel Spacing="2" Margin="16,0,0,0" IsVisible="{Binding WillCreateDocker}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="Deploy folder: "/><Run Text="{Binding DeployFolderName}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowFrontendContainers}">
+                            <Run Text="Frontend container: "/><Run Text="{Binding ContainerNameFrontend}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}" IsVisible="{Binding ShowBackendContainers}">
+                            <Run Text="Backend container: "/><Run Text="{Binding ContainerNameBackend}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="STG host: "/><Run Text="{Binding ReverseProxyHostStg}" Foreground="{DynamicResource TextBrush}"/>
+                            <Run Text="  path: "/><Run Text="{Binding ReverseProxyPathPrefixStg}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="PRD host: "/><Run Text="{Binding ReverseProxyHostPrd}" Foreground="{DynamicResource TextBrush}"/>
+                            <Run Text="  path: "/><Run Text="{Binding ReverseProxyPathPrefixPrd}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}">
+                            <Run Text="Deploy targets: "/><Run Text="{Binding DockerDeployTargets}" Foreground="{DynamicResource TextBrush}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Warning -->
+        <Border Background="#FEF3C7" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="!" FontSize="16" FontWeight="Bold" Foreground="#92400E"/>
+                <TextBlock Text="Click 'Execute' to start the bootstrap process. This action will create resources in the configured services."
+                           Foreground="#92400E"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

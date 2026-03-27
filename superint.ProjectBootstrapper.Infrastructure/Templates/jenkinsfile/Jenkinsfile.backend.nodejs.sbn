@@ -1,0 +1,329 @@
+pipeline {
+    agent { label 'universal' }
+
+    options {
+        timeout(time: 30, unit: "MINUTES")
+        buildDiscarder(logRotator(numToKeepStr: "5"))
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['staging', 'main'],
+            description: 'Target environment for deployment'
+        )
+        booleanParam(
+            name: 'FORCE_REBUILD',
+            defaultValue: false,
+            description: 'Force Docker build without cache'
+        )
+    }
+
+    environment {
+        APP_NAME = "{{ app_name }}"
+        DEPLOY_FOLDER_NAME = "{{ deploy_folder_name }}"
+        APP_STACK = "backend"
+
+        TARGET_ENV = "${params.ENVIRONMENT}"
+
+        ReverseProxy_PATH_PREFIX_STG = "{{ ReverseProxy_path_prefix_hml ?? "/" }}"
+        ReverseProxy_PATH_PREFIX_PRD = "{{ ReverseProxy_path_prefix_prd ?? "/" }}"
+        APP_PUBLIC_URL = "${TARGET_ENV == 'main' ? ReverseProxy_PATH_PREFIX_PRD : ReverseProxy_PATH_PREFIX_STG}"
+        ENV_MODE = "${TARGET_ENV == 'main' ? 'production' : 'staging'}"
+
+        IMAGE_NAME = "${APP_NAME}-${APP_STACK}"
+        IMAGE_TAG = "${TARGET_ENV}-v${env.BUILD_NUMBER}"
+
+        BUILD_DATE = sh(script: 'date +%Y%m%d%H%M%S', returnStdout: true).trim()
+        GIT_COMMIT_SHORT = sh(script: 'git rev-parse --short HEAD || echo "no-commit"', returnStdout: true).trim()
+
+        GIT_URL_ID = "{{ git_url_id }}"
+        GIT_CREDENTIALS_ID = "{{ git_credentials_id }}"
+
+        CONTAINER_REGISTRY_URL_ID = "Container-Registry-URL"
+        CONTAINER_REGISTRY_SERVICE_ACCOUNT_ID = "Container-Registry-Service-Account"
+        CONTAINER_REGISTRY_PATH_STG = "{{ container_registry_path_stg }}"
+        CONTAINER_REGISTRY_PATH_PRD = "{{ container_registry_path_prd }}"
+        CONTAINER_REGISTRY_PATH = "${TARGET_ENV == 'main' ? CONTAINER_REGISTRY_PATH_PRD : CONTAINER_REGISTRY_PATH_STG}"
+        CONTAINER_REGISTRY_REPOSITORY = "${CONTAINER_REGISTRY_PATH}:v${env.BUILD_NUMBER}"
+        CONTAINER_REGISTRY_REPOSITORY_LATEST = "${CONTAINER_REGISTRY_PATH}:latest"
+
+        SERVER_HOST_ID = "${TARGET_ENV == 'main' ? 'PRD-IP' : 'STG-IP'}"
+        SERVER_CREDENTIALS_ID = "${TARGET_ENV == 'main' ? 'Jenkins-Agent-PRD-SSH-Private-Key' : 'Jenkins-Agent-STG-SSH-Private-Key'}"
+    }
+
+    stages {
+        stage("Environment Info") {
+            steps {
+                echo """
+                ========================================
+                Deployment Information:
+                ----------------------------------------
+                Application: ${APP_NAME}
+                Stack: ${APP_STACK}
+                Environment: ${TARGET_ENV}
+                Build Number: ${env.BUILD_NUMBER}
+                Commit: ${GIT_COMMIT_SHORT}
+                Registry Path: ${CONTAINER_REGISTRY_PATH}
+                ========================================
+                """
+            }
+        }
+        stage("Checkout") {
+            steps {
+                echo "Cloning repository from branch: ${TARGET_ENV}..."
+                withCredentials([
+					string(credentialsId: GIT_URL_ID, variable: "GIT_URL"),
+					string(credentialsId: GIT_CREDENTIALS_ID, variable: "GIT_TOKEN")
+				]) {
+					sh '''
+						rm -rf .git
+
+						GIT_DOMAIN=$(echo $GIT_URL | sed 's|https://||' | cut -d'/' -f1)
+						GIT_PATH=$(echo $GIT_URL | sed 's|https://[^/]*/||')
+						
+						git clone -b ${TARGET_ENV} https://${GIT_TOKEN}@${GIT_DOMAIN}/${GIT_PATH} temp_clone
+						
+						mv temp_clone/.git .
+						rm -rf temp_clone
+						git checkout -f
+						git clean -fdx
+					'''
+				}
+                
+                script {
+                    env.GIT_COMMIT_FULL = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    env.GIT_AUTHOR = sh(script: 'git log -1 --pretty=%an', returnStdout: true).trim()
+                }
+            }
+        }
+        stage("Build Docker Image") {
+            steps {
+                echo "Building Docker image for ${TARGET_ENV} environment..."
+                script {
+                    def buildArgs = [
+                        "--force-rm",
+                        "--build-arg BUILD_DATE=${BUILD_DATE}",
+                        "--build-arg APP_PUBLIC_URL=${APP_PUBLIC_URL}",
+                        "--build-arg ENV_MODE=${ENV_MODE}",
+                        "."
+                    ].join(' ')
+                    
+                    if (params.FORCE_REBUILD == true) {
+                        buildArgs = "--no-cache " + buildArgs
+                        echo "⚠️ Building with --no-cache (forced rebuild)"
+                    } else {
+                        echo "✅ Building with cache enabled"
+                    }
+                    
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}", buildArgs)
+                }
+            }
+        }
+        stage("Registry Operations") {
+            stages {
+                stage("Login to Registry") {
+                    steps {
+                        echo "Logging into Container Registry..."
+                        withCredentials([
+                            string(credentialsId: CONTAINER_REGISTRY_URL_ID, variable: "CONTAINER_REGISTRY_URL"),
+                            usernamePassword(credentialsId: CONTAINER_REGISTRY_SERVICE_ACCOUNT_ID, usernameVariable: "CONTAINER_REGISTRY_USER", passwordVariable: "CONTAINER_REGISTRY_PASS")
+                        ]) {
+                            sh '''
+                                echo "$CONTAINER_REGISTRY_PASS" | docker login "$CONTAINER_REGISTRY_URL" -u "$CONTAINER_REGISTRY_USER" --password-stdin
+                            '''
+                        }
+                    }
+                }
+                stage("Tag and Push Images") {
+                    steps {
+                        withCredentials([string(credentialsId: CONTAINER_REGISTRY_URL_ID, variable: "CONTAINER_REGISTRY_URL")]) {
+                            echo "Tagging and pushing images..."
+                            sh '''
+                                echo "⌛ Tagging and pushing images..."
+								
+								export DOCKER_CLIENT_TIMEOUT=300
+								export COMPOSE_HTTP_TIMEOUT=300
+
+                                docker tag "$IMAGE_NAME:$IMAGE_TAG" "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY"
+                                docker tag "$IMAGE_NAME:$IMAGE_TAG" "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY_LATEST"
+                                
+                                docker push "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY"
+								docker push "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY_LATEST"
+								                                
+                                echo "✅ Images pushed successfully!"
+                                
+                                docker rmi "$IMAGE_NAME:$IMAGE_TAG" || true
+                                docker rmi "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY" || true
+                                docker rmi "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY_LATEST" || true
+                            '''
+                        }
+                    }
+                }
+                stage("Logout from Registry") {
+                    steps {
+                        withCredentials([string(credentialsId: CONTAINER_REGISTRY_URL_ID, variable: "CONTAINER_REGISTRY_URL")]) {
+                            sh '''
+                                docker logout "$CONTAINER_REGISTRY_URL"
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage("Deploy to Server") {
+            steps {
+                echo "Deploying ${APP_STACK} to ${TARGET_ENV} server..."
+                withCredentials([
+                    string(credentialsId: SERVER_HOST_ID, variable: "SERVER_HOST"),
+                    string(credentialsId: CONTAINER_REGISTRY_URL_ID, variable: "CONTAINER_REGISTRY_URL"),
+                    usernamePassword(credentialsId: CONTAINER_REGISTRY_SERVICE_ACCOUNT_ID, usernameVariable: "CONTAINER_REGISTRY_USER",  passwordVariable: "CONTAINER_REGISTRY_PASS")
+                ]) {
+                    sshagent(credentials: [SERVER_CREDENTIALS_ID]) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no superint-cicd-plataform-user@"$SERVER_HOST" << EOF
+                                set -e
+                                echo "========================================="
+                                echo "Starting deployment: ${APP_NAME}-${APP_STACK}"
+                                echo "Environment: ${TARGET_ENV}"
+                                echo "========================================="
+                                
+                                echo "$CONTAINER_REGISTRY_PASS" | docker login "$CONTAINER_REGISTRY_URL" -u "$CONTAINER_REGISTRY_USER" --password-stdin
+                                
+								cd /opt/project-data/${DEPLOY_FOLDER_NAME}/
+                                
+                                echo "Stopping current container..."
+                                docker compose stop ${APP_STACK} || true
+                                sleep 2
+                                docker compose rm -f ${APP_STACK} || true
+                                
+                                echo "Cleaning old images..."
+                                docker images | grep "${CONTAINER_REGISTRY_URL}/${CONTAINER_REGISTRY_PATH}" | awk '{print $3}' | xargs -r docker rmi -f || true
+                                
+                                echo "Pulling new image..."
+                                docker pull "$CONTAINER_REGISTRY_URL/$CONTAINER_REGISTRY_REPOSITORY_LATEST"
+                                
+                                echo "Starting new container..."
+                                docker compose up -d ${APP_STACK}
+                                
+                                echo "Waiting for container to be healthy..."
+                                sleep 10
+                                
+                                if docker compose ps ${APP_STACK} | grep -q "Up\\|running"; then
+                                    echo "✅ Container is running!"
+                                else
+                                    echo "❌ Container failed to start!"
+                                    docker compose logs --tail=50 ${APP_STACK}
+                                    exit 1
+                                fi
+                                
+                                echo "Recent logs:"
+                                docker compose logs --tail=20 ${APP_STACK}
+                                
+                                docker image prune -f
+                                docker container prune -f
+                                
+                                docker logout "$CONTAINER_REGISTRY_URL"
+                                
+                                echo "========================================="
+                                echo "✅ Deployment completed successfully!"
+                                echo "========================================="
+                        '''
+                    }
+                }
+            }
+        }
+        stage("Verify Deployment") {
+            steps {
+                echo "Verifying ${APP_STACK} deployment..."
+                withCredentials([string(credentialsId: SERVER_HOST_ID, variable: "SERVER_HOST")]) {
+                    sshagent(credentials: [SERVER_CREDENTIALS_ID]) {
+                        script {
+                            def maxRetries = 5
+                            def retryCount = 0
+                            def healthy = false
+                            
+                            while (retryCount < maxRetries && !healthy) {
+                                try {
+                                    sh """
+                                        ssh -o StrictHostKeyChecking=no superint-cicd-plataform-user@"$SERVER_HOST" << 'EOF'
+                                            cd /opt/project-data/${DEPLOY_FOLDER_NAME}/
+
+                                            if docker compose ps ${APP_STACK} | grep -q "Up\\|running"; then
+                                                echo "✅ Container is up and running"
+                                                exit 0
+                                            else
+                                                echo "❌ Container is not running"
+                                                exit 1
+                                            fi
+EOF
+                                    """
+                                    healthy = true
+                                    echo "✅ ${APP_STACK} is healthy and running!"
+                                } catch (Exception e) {
+                                    retryCount++
+                                    if (retryCount < maxRetries) {
+                                        echo "Attempt ${retryCount}/${maxRetries} - Container not ready. Waiting 10 seconds..."
+                                        sleep(10)
+                                    } else {
+                                        error "${APP_STACK} failed to become healthy after ${maxRetries} attempts"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage("Cleanup") {
+            steps {
+                echo "Cleaning up workspace and Docker resources..."
+                sh '''
+                    docker image prune -f || true
+                    docker container prune -f || true
+                    docker volume prune -f || true
+					
+                    echo "Disk usage after cleanup:"
+                    df -h | grep -E "^/dev/" || true
+                '''
+                cleanWs()
+            }
+        }
+    }
+    post {
+        always {
+            echo """
+            ========================================
+            Pipeline Execution Summary
+            ========================================
+            Status: ${currentBuild.result ?: 'SUCCESS'}
+            Application: ${APP_NAME}-${APP_STACK}
+            Environment: ${TARGET_ENV}
+            Duration: ${currentBuild.durationString}
+            ========================================
+            """
+        }
+        success {
+            echo """
+            ✅ Deployment Successful!
+            ----------------------------------------
+            Application: ${APP_NAME}-${APP_STACK}
+            Environment: ${TARGET_ENV}
+            Version: v${env.BUILD_NUMBER}
+            Commit: ${GIT_COMMIT_SHORT}
+            ----------------------------------------
+            """
+        }
+        failure {
+            echo """
+            ❌ Deployment Failed!
+            ----------------------------------------
+            Application: ${APP_NAME}-${APP_STACK}
+            Environment: ${TARGET_ENV}
+            Please check the logs for details.
+            ----------------------------------------
+            """
+        }
+    }
+}

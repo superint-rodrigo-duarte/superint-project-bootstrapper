@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <!-- Branding / Assembly Info -->
+    <Product>Project Bootstrapper</Product>
+    <Company>superint.ai</Company>
+    <Authors>superint.ai</Authors>
+    <Copyright>© 2025 superint.ai. All rights reserved.</Copyright>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+</Project>

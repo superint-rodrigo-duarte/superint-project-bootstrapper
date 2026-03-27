@@ -1,0 +1,36 @@
+name: {{ deploy_folder_name }}
+
+networks:
+  {{ network_name }}:
+    external: true
+    driver: bridge
+
+services:
+  backend:
+    image: {{ container_registry_url }}/{{ registry_path_backend }}:latest
+    container_name: {{ container_name_backend }}
+    restart: unless-stopped
+    labels:
+      - "ReverseProxy.enable=true"
+      - "ReverseProxy.http.routers.{{ container_name_backend }}.rule=Host(`{{ ReverseProxy_host }}`) && PathPrefix(`{{ ReverseProxy_path_prefix_api }}`)"
+      - "ReverseProxy.http.routers.{{ container_name_backend }}.entrypoints={{ ReverseProxy_entrypoint }}"
+{{- if is_production }}
+      - "ReverseProxy.http.routers.{{ container_name_backend }}.tls=true"
+{{- end }}
+      - "ReverseProxy.http.services.{{ container_name_backend }}.loadbalancer.server.scheme=http"
+      - "ReverseProxy.http.services.{{ container_name_backend }}.loadbalancer.server.port={{ backend_port }}"
+      - "ReverseProxy.http.services.{{ container_name_backend }}.loadbalancer.serversTransport=insecure@file"
+      - "ReverseProxy.http.middlewares.{{ container_name_backend }}-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+{{- if use_strip_prefix_backend }}
+      - "ReverseProxy.http.middlewares.{{ container_name_backend }}-strip-prefix.stripprefix.prefixes={{ ReverseProxy_path_prefix }}"
+      - "ReverseProxy.http.routers.{{ container_name_backend }}.middlewares={{ container_name_backend }}-headers@docker,{{ container_name_backend }}-strip-prefix@docker,compression@file,file-limits@file"
+{{- else }}
+      - "ReverseProxy.http.routers.{{ container_name_backend }}.middlewares={{ container_name_backend }}-headers@docker,compression@file,file-limits@file"
+{{- end }}
+{{- if is_csharp_backend }}
+    environment:
+      - ASPNETCORE_ENVIRONMENT={{ aspnetcore_environment }}
+      - ASPNETCORE_URLS=http://+:{{ backend_port }}
+{{- end }}
+    networks:
+      - {{ network_name }}

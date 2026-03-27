@@ -1,0 +1,110 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+  <!-- Corner Radius -->
+  <CornerRadius x:Key="ControlCornerRadius">5</CornerRadius>
+  <CornerRadius x:Key="OverlayCornerRadius">10</CornerRadius>
+
+  <!-- Padding -->
+  <Thickness x:Key="ActionButtonPadding">13,7</Thickness>
+  <Thickness x:Key="FunctionButtonPadding">13,7</Thickness>
+  <Thickness x:Key="ComboBoxDropdownBorderPadding">5</Thickness>
+
+  <!-- Brushes from theme colors -->
+  <SolidColorBrush x:Key="RegionBrush" Color="{DynamicResource RegionColor}" />
+  <SolidColorBrush x:Key="DismissColor" Color="#DD4343" />
+  <SolidColorBrush x:Key="WarningMessageForeground" Color="#DDA73E" />
+  <SolidColorBrush x:Key="SuccessColor" Color="{DynamicResource SystemAccentColor}" />
+
+  <!-- Action Buttons -->
+  <SolidColorBrush x:Key="ActionButtonBackgroundColor" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="ActionButtonForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonPointerOverBackgroundColor" Color="{DynamicResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="ActionButtonPointerOverForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonPressedBackgroundColor" Color="{DynamicResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="ActionButtonPressedForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonDisabledBackgroundColor" Color="{DynamicResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="ActionButtonDisabledForegroundColor" Color="{DynamicResource SystemChromeDisabledHighColor}" />
+
+  <!-- Function Buttons -->
+  <SolidColorBrush x:Key="FunctionButtonBackgroundColor" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="FunctionButtonForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="FunctionButtonPointerOverBackgroundColor" Color="{DynamicResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="FunctionButtonPointerOverForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="FunctionButtonPressedBackgroundColor" Color="{DynamicResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="FunctionButtonPressedForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="FunctionButtonDisabledBackgroundColor" Color="{DynamicResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="FunctionButtonDisabledForegroundColor" Color="{DynamicResource SystemChromeDisabledHighColor}" />
+
+  <!-- Invisible Buttons -->
+  <SolidColorBrush x:Key="InvisibleButtonBackgroundColor" Opacity="0" Color="{DynamicResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="InvisibleButtonPointerOverBackgroundColor" Opacity="0.18" Color="{DynamicResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="InvisibleButtonPressedBackgroundColor" Opacity="0.16" Color="{DynamicResource SystemBaseHighColor}" />
+
+  <!-- Text -->
+  <SolidColorBrush x:Key="TextForegroundColor" Color="{DynamicResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="TextControlForeground" Color="{DynamicResource SystemBaseHighColor}" />
+
+  <!-- Separator -->
+  <SolidColorBrush x:Key="SeparatorBackgroundBrush" Opacity="0.5" Color="{DynamicResource SystemBaseHighColor}" />
+
+  <!-- Header -->
+  <SolidColorBrush x:Key="HeaderRegionColor" Color="{DynamicResource RegionColor}" />
+
+  <!-- NavBar -->
+  <SolidColorBrush x:Key="NavBarItemSelectedBrush" Color="{DynamicResource SystemBaseHighColor}" />
+
+  <!-- Status Colors -->
+  <SolidColorBrush x:Key="StatusSuccessBrush" Color="#5BB626" />
+  <SolidColorBrush x:Key="StatusWarningBrush" Color="#DDA73E" />
+  <SolidColorBrush x:Key="StatusErrorBrush" Color="#DD4343" />
+  <SolidColorBrush x:Key="StatusPendingBrush" Color="#949494" />
+
+  <!-- Log Colors -->
+  <SolidColorBrush x:Key="LogInfoColor" Color="{DynamicResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="LogSuccessColor" Color="#5BB626" />
+  <SolidColorBrush x:Key="LogWarningColor" Color="#DDA73E" />
+  <SolidColorBrush x:Key="LogErrorColor" Color="#DD4343" />
+
+  <!-- Font Sizes -->
+  <system:Double x:Key="FontSizeH1">28</system:Double>
+  <system:Double x:Key="FontSizeH2">22</system:Double>
+  <system:Double x:Key="FontSizeH3">18</system:Double>
+  <system:Double x:Key="FontSizeH4">16</system:Double>
+  <system:Double x:Key="FontSizeH5">14</system:Double>
+  <system:Double x:Key="FontSizeH6">13</system:Double>
+  <system:Double x:Key="FontSizeH7">12</system:Double>
+  <system:Double x:Key="FontSizeH8">11</system:Double>
+  <system:Double x:Key="FontSizeH9">10</system:Double>
+
+  <!-- Spacing -->
+  <system:Double x:Key="SpacingXS">4</system:Double>
+  <system:Double x:Key="SpacingSM">8</system:Double>
+  <system:Double x:Key="SpacingMD">12</system:Double>
+  <system:Double x:Key="SpacingLG">16</system:Double>
+  <system:Double x:Key="SpacingXL">24</system:Double>
+  <system:Double x:Key="SpacingXXL">32</system:Double>
+
+  <!-- Card/Panel Dimensions -->
+  <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
+  <CornerRadius x:Key="PanelCornerRadius">16</CornerRadius>
+  <Thickness x:Key="CardPadding">16</Thickness>
+  <Thickness x:Key="PanelPadding">24</Thickness>
+
+  <!-- Icon Sizes -->
+  <system:Double x:Key="IconSizeXS">14</system:Double>
+  <system:Double x:Key="IconSizeSM">16</system:Double>
+  <system:Double x:Key="IconSizeMD">20</system:Double>
+  <system:Double x:Key="IconSizeLG">24</system:Double>
+  <system:Double x:Key="IconSizeXL">32</system:Double>
+
+  <!-- NavBar Dimensions -->
+  <system:Double x:Key="NavBarWidth">75</system:Double>
+  <system:Double x:Key="NavBarIconSize">22</system:Double>
+
+  <!-- Log Panel -->
+  <system:Double x:Key="LogPanelHeight">120</system:Double>
+  <system:Double x:Key="LogFontSize">11</system:Double>
+
+</ResourceDictionary>

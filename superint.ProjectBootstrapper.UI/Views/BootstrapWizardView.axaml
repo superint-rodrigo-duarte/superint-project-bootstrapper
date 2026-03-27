@@ -1,0 +1,299 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels"
+             xmlns:models="using:superint.ProjectBootstrapper.UI.Models"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="superint.ProjectBootstrapper.UI.Views.BootstrapWizardView"
+             x:DataType="vm:BootstrapWizardViewModel">
+
+    <Panel>
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,12,16">
+                <StackPanel>
+                    <TextBlock Text="{x:Static strings:UIStrings+Sections.ProjectBootstrap}"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock FontSize="14"
+                               Foreground="{DynamicResource TextMutedBrush}">
+                        <Run Text="Step "/>
+                        <Run Text="{Binding DisplayStepNumber}"/>
+                        <Run Text=" of "/>
+                        <Run Text="{Binding TotalSteps}"/>
+                        <Run Text=": "/>
+                        <Run Text="{Binding CurrentStepTitle}"/>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!-- Step Progress Indicator -->
+            <Border Grid.Row="1"
+                    Background="{DynamicResource Layer2BackgroundBrush}"
+                    CornerRadius="8"
+                    Padding="16,12"
+                    Margin="0,0,12,16">
+                <ItemsControl ItemsSource="{Binding Steps}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:WizardStepInfo">
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Step Circle -->
+                                <Button Classes="plain"
+                                        Command="{Binding $parent[ItemsControl].((vm:BootstrapWizardViewModel)DataContext).GoToStepCommand}"
+                                        CommandParameter="{Binding Index}"
+                                        Padding="0"
+                                        MinWidth="0"
+                                        MinHeight="0">
+                                    <Panel>
+                                        <!-- Inactive/Pending Circle (hollow) -->
+                                        <Border Width="20" Height="20"
+                                                CornerRadius="10"
+                                                BorderThickness="2"
+                                                BorderBrush="{DynamicResource TextMutedBrush}"
+                                                Background="Transparent"
+                                                IsVisible="{Binding !IsActive}">
+                                            <Border.Styles>
+                                                <Style Selector="Border">
+                                                    <Setter Property="IsVisible" Value="True"/>
+                                                </Style>
+                                            </Border.Styles>
+                                            <!-- Completed checkmark or empty -->
+                                            <TextBlock Text="&#x2713;"
+                                                       FontSize="11"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="#22C55E"
+                                                       IsVisible="{Binding IsCompleted}"/>
+                                        </Border>
+                                        <!-- Active Circle (filled) -->
+                                        <Border Width="20" Height="20"
+                                                CornerRadius="10"
+                                                Background="{DynamicResource SystemAccentBrush}"
+                                                IsVisible="{Binding IsActive}">
+                                            <TextBlock Text="{Binding DisplayNumber}"
+                                                       FontSize="10"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </Panel>
+                                </Button>
+                                <!-- Connecting Line (not after last item) -->
+                                <Border Width="32" Height="2"
+                                        Background="{DynamicResource TextMutedBrush}"
+                                        VerticalAlignment="Center"
+                                        Margin="4,0"
+                                        Opacity="0.3"
+                                        IsVisible="{Binding !IsLast}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+
+            <!-- Step Content -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource Layer2BackgroundBrush}"
+                    CornerRadius="12"
+                    Padding="24"
+                    Margin="0,0,12,0">
+                <Panel>
+                    <ScrollViewer>
+                        <ContentControl Content="{Binding CurrentStep}"/>
+                    </ScrollViewer>
+
+                    <!-- Execution Summary Panel (only on last step after execution) -->
+                    <Border Background="{DynamicResource Layer2BackgroundBrush}"
+                            CornerRadius="12"
+                            Padding="24"
+                            IsVisible="{Binding ShowExecutionSummary}">
+                        <StackPanel Spacing="16">
+                            <TextBlock Text="Execution Summary"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}"/>
+
+                            <!-- Counters -->
+                            <StackPanel Orientation="Horizontal" Spacing="24">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Width="12" Height="12" CornerRadius="6" Background="#22C55E"/>
+                                    <TextBlock Foreground="#22C55E" FontWeight="SemiBold">
+                                        <Run Text="{Binding SuccessCount}"/>
+                                        <Run Text=" success"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Width="12" Height="12" CornerRadius="6" Background="#EF4444"/>
+                                    <TextBlock Foreground="#EF4444" FontWeight="SemiBold">
+                                        <Run Text="{Binding FailureCount}"/>
+                                        <Run Text=" failures"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Width="12" Height="12" CornerRadius="6" Background="#EAB308"/>
+                                    <TextBlock Foreground="#EAB308" FontWeight="SemiBold">
+                                        <Run Text="{Binding SkippedCount}"/>
+                                        <Run Text=" skipped"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Task Results List -->
+                            <ItemsControl ItemsSource="{Binding ExecutionResults}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:BootstrapTaskResult">
+                                        <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                                                CornerRadius="6"
+                                                Padding="12"
+                                                Margin="0,2">
+                                            <Grid ColumnDefinitions="Auto,8,*,Auto">
+                                                <Panel Grid.Column="0" Width="8" Height="8">
+                                                    <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E"
+                                                            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:BootstrapTaskStatus.Success}}"/>
+                                                    <Border Width="8" Height="8" CornerRadius="4" Background="#EF4444"
+                                                            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:BootstrapTaskStatus.Failed}}"/>
+                                                    <Border Width="8" Height="8" CornerRadius="4" Background="#EAB308"
+                                                            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:BootstrapTaskStatus.Skipped}}"/>
+                                                </Panel>
+                                                <TextBlock Grid.Column="2" Text="{Binding TaskName}" Foreground="{DynamicResource TextBrush}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Message}"
+                                                           Foreground="{DynamicResource TextMutedBrush}"
+                                                           FontSize="12"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Summary Text -->
+                            <TextBlock Text="{Binding SummaryText}"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       FontSize="14"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </Border>
+
+            <!-- Navigation Buttons -->
+            <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" Margin="0,16,12,0">
+                <Button Grid.Column="0"
+                        Content="{x:Static strings:UIStrings+Wizard+Actions.Cancel}"
+                        Classes="function"
+                        Command="{Binding CancelCommand}"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                    <Button Content="{x:Static strings:UIStrings+Wizard+Actions.Back}"
+                            Classes="function"
+                            Command="{Binding GoBackCommand}"
+                            IsEnabled="{Binding CanGoBack}"/>
+                    <Button Content="{x:Static strings:UIStrings+Wizard+Actions.Next}"
+                            Classes="action"
+                            Command="{Binding GoNextCommand}"
+                            IsVisible="{Binding !IsLastStep}"/>
+                    <Button Content="{x:Static strings:UIStrings+Wizard+Actions.Execute}"
+                            Classes="action"
+                            Command="{Binding RequestExecuteCommand}"
+                            IsVisible="{Binding IsLastStep}"
+                            IsEnabled="{Binding !IsExecuting}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Confirmation Overlay -->
+        <Border Background="#80000000"
+                IsVisible="{Binding ShowConfirmation}">
+            <Border Background="{DynamicResource Layer2BackgroundBrush}"
+                    CornerRadius="12"
+                    Padding="24"
+                    MaxWidth="600"
+                    MaxHeight="500"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Confirm Execution"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+
+                    <!-- Validation Errors -->
+                    <Border Background="#FEF2F2"
+                            CornerRadius="8"
+                            Padding="12"
+                            IsVisible="{Binding HasValidationErrors}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Configuration Warnings" FontWeight="SemiBold" Foreground="#991B1B"/>
+                            <ItemsControl ItemsSource="{Binding ValidationErrors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="#991B1B" FontSize="12" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Connection Test Results -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Connection Tests" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <ItemsControl ItemsSource="{Binding ConnectionTestResults}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:ConnectionTestResult">
+                                    <Grid ColumnDefinitions="Auto,8,*,Auto" Margin="0,2">
+                                        <Panel Grid.Column="0" Width="8" Height="8">
+                                            <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E"
+                                                    IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:ConnectionStatus.Success}}"/>
+                                            <Border Width="8" Height="8" CornerRadius="4" Background="#EF4444"
+                                                    IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:ConnectionStatus.Failed}}"/>
+                                        </Panel>
+                                        <TextBlock Grid.Column="2" Text="{Binding ServiceName}" Foreground="{DynamicResource TextBrush}" FontSize="13"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Message}"
+                                                   Foreground="{DynamicResource TextMutedBrush}"
+                                                   FontSize="11"
+                                                   MaxWidth="200"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <!-- Warning if failures -->
+                    <Border Background="#FEF3C7" CornerRadius="8" Padding="12"
+                            IsVisible="{Binding HasConnectionFailures}">
+                        <TextBlock Text="Some connections failed. You can still proceed, but related tasks may fail."
+                                   Foreground="#92400E"
+                                   TextWrapping="Wrap"
+                                   FontSize="12"/>
+                    </Border>
+
+                    <!-- Testing indicator -->
+                    <TextBlock Text="Testing connections..."
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               IsVisible="{Binding IsTestingConnections}"/>
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                        <Button Content="Cancel"
+                                Classes="function"
+                                Command="{Binding CancelConfirmationCommand}"/>
+                        <Button Content="Execute"
+                                Classes="action"
+                                Command="{Binding ConfirmExecuteCommand}"
+                                IsEnabled="{Binding !IsTestingConnections}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Panel>
+</UserControl>

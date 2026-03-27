@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardContainerRegistryStepView"
+             x:DataType="vm:WizardContainerRegistryStepViewModel">
+
+    <StackPanel Spacing="16">
+        <!-- Header with Toggle -->
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="Container Registry"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextBrush}"/>
+            <ToggleSwitch Grid.Column="1"
+                          IsChecked="{Binding IsEnabled}"
+                          OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                          OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+        </Grid>
+
+        <!-- Project Name (always visible - Docker Compose needs it) -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Project Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <TextBox Text="{Binding ProjectName}" Watermark="e.g., my-project"/>
+        </StackPanel>
+
+        <!-- Path Pattern (always visible) -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Path Pattern" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+            <ComboBox ItemsSource="{Binding PathPatternOptions}"
+                      SelectedItem="{Binding PathPattern}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <!-- Container Registry Paths (editable, always visible) -->
+        <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Container Registry Paths" FontSize="14" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextBrush}"/>
+
+                <!-- Backend paths -->
+                <StackPanel Spacing="8" IsVisible="{Binding ShowBackendPaths}">
+                    <TextBlock Text="Backend" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="STG" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding PathBackendStg}" FontSize="12" FontFamily="Consolas"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="PRD" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding PathBackendPrd}" FontSize="12" FontFamily="Consolas"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Frontend paths -->
+                <StackPanel Spacing="8" IsVisible="{Binding ShowFrontendPaths}">
+                    <TextBlock Text="Frontend" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="STG" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding PathFrontendStg}" FontSize="12" FontFamily="Consolas"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="PRD" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding PathFrontendPrd}" FontSize="12" FontFamily="Consolas"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Skip Message -->
+        <Border Background="{DynamicResource Layer1BackgroundBrush}"
+                CornerRadius="8"
+                Padding="16"
+                IsVisible="{Binding !IsEnabled}">
+            <TextBlock Text="Project creation skipped. Paths still used by Docker Compose and Jenkins."
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       TextWrapping="Wrap"/>
+        </Border>
+    </StackPanel>
+</UserControl>

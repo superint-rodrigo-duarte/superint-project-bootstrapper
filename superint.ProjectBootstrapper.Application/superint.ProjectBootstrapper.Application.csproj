@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
+    <RootNamespace>superint.ProjectBootstrapper.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\superint.ProjectBootstrapper.DTO\superint.ProjectBootstrapper.DTO.csproj" />
+    <ProjectReference Include="..\superint.ProjectBootstrapper.Infrastructure\superint.ProjectBootstrapper.Infrastructure.csproj" />
+    <ProjectReference Include="..\superint.ProjectBootstrapper.Shared\superint.ProjectBootstrapper.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

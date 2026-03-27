@@ -1,0 +1,103 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- NavItem (Simple nav button) -->
+  <Style Selector="Button.navItem">
+    <Setter Property="Width" Value="60" />
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Margin" Value="3,2,2,2" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource NavBarItemForeground}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Button.navItem PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource NavBarItemForeground}" />
+  </Style>
+  <Style Selector="Button.navItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPointerOverBackgroundColor}" />
+  </Style>
+  <Style Selector="Button.navItem:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPressedBackgroundColor}" />
+  </Style>
+  <Style Selector="Button.navItem.selected">
+    <Setter Property="Background" Value="{DynamicResource Layer2BackgroundBrush}" />
+  </Style>
+  <Style Selector="Button.navItem.selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource Layer2BackgroundBrush}" />
+  </Style>
+  <Style Selector="Button.navItem.selected PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource SystemAccentBrush}" />
+  </Style>
+
+  <!-- NavBar Container -->
+  <Style Selector="Border.navBar">
+    <Setter Property="Width" Value="80" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="4" />
+  </Style>
+
+  <!-- NavBar Item -->
+  <Style Selector="Button.navBarItem">
+    <Setter Property="Width" Value="72" />
+    <Setter Property="Height" Value="56" />
+    <Setter Property="Margin" Value="0,2" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.navBarItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPointerOverBackgroundColor}" />
+  </Style>
+
+  <Style Selector="Button.navBarItem:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPressedBackgroundColor}" />
+  </Style>
+
+  <Style Selector="Button.navBarItem.selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPointerOverBackgroundColor}" />
+  </Style>
+
+  <!-- NavBar Item Content -->
+  <Style Selector="Button.navBarItem StackPanel">
+    <Setter Property="Spacing" Value="4" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.navBarItem PathIcon">
+    <Setter Property="Width" Value="24" />
+    <Setter Property="Height" Value="24" />
+    <Setter Property="Foreground" Value="{DynamicResource NavBarItemForeground}" />
+  </Style>
+
+  <Style Selector="Button.navBarItem TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeH9}" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource NavBarItemForeground}" />
+  </Style>
+
+  <Style Selector="Button.navBarItem.selected PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+  </Style>
+
+  <Style Selector="Button.navBarItem.selected TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+  </Style>
+
+  <!-- NavBar Separator -->
+  <Style Selector="Separator.navBarSeparator">
+    <Setter Property="Background" Value="{DynamicResource SeparatorBackgroundBrush}" />
+    <Setter Property="Height" Value="1" />
+    <Setter Property="Margin" Value="8,4" />
+  </Style>
+
+</Styles>

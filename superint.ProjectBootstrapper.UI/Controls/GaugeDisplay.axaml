@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="120"
+             x:Class="superint.ProjectBootstrapper.UI.Controls.GaugeDisplay">
+
+    <StackPanel HorizontalAlignment="Center">
+        <Border Width="80" Height="80"
+                Background="{DynamicResource Layer1BackgroundBrush}"
+                CornerRadius="40">
+            <Grid>
+                <!-- Circular Progress Background -->
+                <Arc StartAngle="-135" SweepAngle="270"
+                     Stroke="{DynamicResource RegionBrush}"
+                     StrokeThickness="6"
+                     Width="70" Height="70"/>
+                <!-- Value in center -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock x:Name="ValueText"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock x:Name="UnitText"
+                               FontSize="10"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextMutedBrush}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <TextBlock x:Name="LabelText"
+                   FontSize="11"
+                   HorizontalAlignment="Center"
+                   Margin="0,4,0,0"
+                   Foreground="{DynamicResource TextMutedBrush}"/>
+    </StackPanel>
+</UserControl>

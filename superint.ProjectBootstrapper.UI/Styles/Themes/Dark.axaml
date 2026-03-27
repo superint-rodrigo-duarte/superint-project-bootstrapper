@@ -1,0 +1,189 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://superint.ProjectBootstrapper.UI/Styles/Themes/Base.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <!-- Accent Color (Wasabi Green) -->
+  <Color x:Key="SystemAccentColor">#FF29903B</Color>
+  <Color x:Key="SystemAccentColorLight1">#FF238636</Color>
+  <Color x:Key="SystemAccentColorLight2">#FF9BC75B</Color>
+  <Color x:Key="SystemAccentColorLight3">#FFB8E26B</Color>
+  <Color x:Key="SystemAccentColorDark1">#FF207931</Color>
+  <Color x:Key="SystemAccentColorDark2">#FF326B00</Color>
+  <Color x:Key="SystemAccentColorDark3">#FF1A5200</Color>
+
+  <!-- System Alt Colors -->
+  <Color x:Key="SystemAltHighColor">#FF000000</Color>
+  <Color x:Key="SystemAltLowColor">#FF000000</Color>
+  <Color x:Key="SystemAltMediumColor">#FF000000</Color>
+  <Color x:Key="SystemAltMediumHighColor">#FF000000</Color>
+  <Color x:Key="SystemAltMediumLowColor">#FF000000</Color>
+
+  <!-- System Base Colors (Text) -->
+  <Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
+  <Color x:Key="SystemBaseLowColor">#FF414141</Color>
+  <Color x:Key="SystemBaseMediumColor">#FF949494</Color>
+  <Color x:Key="SystemBaseMediumHighColor">#FFAFAFAF</Color>
+  <Color x:Key="SystemBaseMediumLowColor">#FF5D5D5D</Color>
+
+  <!-- System Chrome Colors (Backgrounds/Borders) -->
+  <Color x:Key="SystemChromeAltLowColor">#FFAFAFAF</Color>
+  <Color x:Key="SystemChromeAltMediumHighColor">#FFE0E0E0</Color>
+  <Color x:Key="SystemChromeAltHighColor">#FF262626</Color>
+  <Color x:Key="SystemChromeBlackHighColor">#FF000000</Color>
+  <Color x:Key="SystemChromeBlackLowColor">#FFAFAFAF</Color>
+  <Color x:Key="SystemChromeBlackMediumColor">#FF000000</Color>
+  <Color x:Key="SystemChromeBlackMediumLowColor">#FF000000</Color>
+  <Color x:Key="SystemChromeDisabledHighColor">#FF707070</Color>
+  <Color x:Key="SystemChromeDisabledLowColor">#FF333333</Color>
+  <Color x:Key="SystemChromeWhiteColor">#FFFFFFFF</Color>
+  <Color x:Key="SystemChromeGrayColor">#FF787878</Color>
+  <Color x:Key="SystemChromeLowColor">#3F3F3F</Color>
+  <Color x:Key="SystemChromeMediumLowColor">#FF202020</Color>
+  <Color x:Key="SystemChromeMediumColor">#262626</Color>
+  <Color x:Key="SystemChromeHighColor">#323232</Color>
+
+  <!-- Region Colors -->
+  <Color x:Key="RegionColor">#1F1F1F</Color>
+  <Color x:Key="TileRegionColor">#262626</Color>
+  <Color x:Key="BorderColor">#66757575</Color>
+
+  <!-- Acrylic/Nav Colors -->
+  <Color x:Key="AcrylicTrimForeground">#FFAFAFAF</Color>
+
+  <!-- Layer Colors -->
+  <Color x:Key="Layer1BackgroundColor">#262626</Color>
+  <Color x:Key="Layer2BackgroundColor">#333333</Color>
+  <SolidColorBrush x:Key="Layer1BackgroundBrush" Color="#262626" />
+  <SolidColorBrush x:Key="Layer2BackgroundBrush" Color="#333333" />
+
+  <!-- Brushes -->
+  <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+  <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
+
+  <!-- TextControl -->
+  <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="{StaticResource SystemChromeDisabledHighColor}" />
+
+  <SolidColorBrush x:Key="TextControlBackground" Color="{StaticResource SystemChromeMediumColor}" />
+  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{StaticResource SystemChromeHighColor}" />
+  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{StaticResource SystemChromeMediumColor}" />
+  <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+
+  <SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource SystemBaseLowColor}" />
+  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{StaticResource SystemBaseMediumLowColor}" />
+  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+
+  <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="{StaticResource SystemBaseMediumColor}" />
+  <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="{StaticResource SystemBaseMediumColor}" />
+  <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="{StaticResource SystemBaseMediumLowColor}" />
+  <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="{StaticResource SystemChromeDisabledHighColor}" />
+
+  <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="TextControlHeaderForeground" Color="{StaticResource SystemBaseMediumHighColor}" />
+
+  <!-- Button -->
+  <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource SystemChromeMediumColor}" />
+  <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource SystemChromeHighColor}" />
+  <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource SystemChromeLowColor}" />
+  <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ButtonForegroundPressed" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="{StaticResource SystemChromeDisabledHighColor}" />
+  <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+  <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+  <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+
+  <!-- ComboBox -->
+  <SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource Layer2BackgroundColor}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{StaticResource SystemChromeHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="{StaticResource Layer1BackgroundColor}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource SystemBaseLowColor}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="{StaticResource SystemBaseMediumLowColor}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="{StaticResource SystemBaseMediumLowColor}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource SystemChromeMediumLowColor}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{StaticResource BorderColor}" />
+  <SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="{StaticResource SystemChromeDisabledHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxPlaceholderForeground" Color="{StaticResource SystemBaseMediumColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemForeground" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundPressed" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemBackground" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Opacity="0.15" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed" Color="{StaticResource SystemChromeHighColor}" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" />
+
+  <!-- CheckBox -->
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="{StaticResource SystemChromeMediumColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" Color="{StaticResource SystemChromeHighColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPressed" Color="{StaticResource SystemChromeLowColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="{StaticResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="{StaticResource SystemBaseMediumLowColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="{StaticResource SystemBaseMediumColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="{StaticResource SystemBaseMediumColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="{StaticResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="{StaticResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="CheckBoxForeground" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="CheckBoxForegroundUnchecked" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="CheckBoxForegroundChecked" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUnchecked" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="{StaticResource SystemBaseHighColor}" />
+
+  <!-- ProgressBar -->
+  <SolidColorBrush x:Key="ProgressBarForeground" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="ProgressBarBackground" Color="{StaticResource SystemChromeMediumColor}" />
+
+  <!-- ScrollBar -->
+  <SolidColorBrush x:Key="ScrollBarThumbFill" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="{StaticResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="{StaticResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="ScrollBarTrackFill" Color="Transparent" />
+
+  <!-- Text Brushes -->
+  <SolidColorBrush x:Key="TextBrush" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource SystemBaseMediumColor}" />
+
+  <!-- Status Brushes -->
+  <SolidColorBrush x:Key="SuccessBrush" Color="#5BB626" />
+  <SolidColorBrush x:Key="WarningBrush" Color="#DDA73E" />
+  <SolidColorBrush x:Key="ErrorBrush" Color="#DD4343" />
+
+  <!-- Action Buttons -->
+  <SolidColorBrush x:Key="ActionButtonBackgroundColor" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="ActionButtonForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonPointerOverBackgroundColor" Color="{StaticResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="ActionButtonPointerOverForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonPressedBackgroundColor" Color="{StaticResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="ActionButtonPressedForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="ActionButtonDisabledBackgroundColor" Color="{StaticResource SystemChromeDisabledLowColor}" />
+  <SolidColorBrush x:Key="ActionButtonDisabledForegroundColor" Color="{StaticResource SystemChromeDisabledHighColor}" />
+
+  <!-- Function Buttons -->
+  <SolidColorBrush x:Key="FunctionButtonBackgroundColor" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="FunctionButtonForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="FunctionButtonPointerOverBackgroundColor" Color="{StaticResource SystemAccentColorLight1}" />
+  <SolidColorBrush x:Key="FunctionButtonPointerOverForegroundColor">White</SolidColorBrush>
+  <SolidColorBrush x:Key="FunctionButtonPressedBackgroundColor" Color="{StaticResource SystemAccentColorDark1}" />
+  <SolidColorBrush x:Key="FunctionButtonPressedForegroundColor">White</SolidColorBrush>
+
+  <!-- NavBar -->
+  <SolidColorBrush x:Key="NavBarItemSelectedBrush" Color="{StaticResource SystemBaseHighColor}" />
+  <SolidColorBrush x:Key="NavBarItemForeground" Color="{StaticResource SystemBaseMediumColor}" />
+
+</ResourceDictionary>

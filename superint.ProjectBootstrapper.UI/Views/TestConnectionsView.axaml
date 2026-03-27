@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels"
+             xmlns:models="using:superint.ProjectBootstrapper.UI.Models"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="superint.ProjectBootstrapper.UI.Views.TestConnectionsView"
+             x:DataType="vm:TestConnectionsViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,12,24">
+            <TextBlock Text="{x:Static strings:UIStrings+Sections.TestConnections}"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextBrush}"/>
+            <Button Grid.Column="1"
+                    Content="{x:Static strings:UIStrings+Labels.TestAll}"
+                    Classes="action"
+                    Command="{Binding TestAllConnectionsCommand}"
+                    IsEnabled="{Binding !IsTesting}"/>
+        </Grid>
+
+        <!-- Connection List -->
+        <ScrollViewer Grid.Row="1" Padding="0,0,12,0">
+            <ItemsControl ItemsSource="{Binding Results}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:ConnectionTestResult">
+                        <Border Background="{DynamicResource Layer2BackgroundBrush}"
+                                CornerRadius="8"
+                                Padding="16"
+                                Margin="0,0,0,8">
+                            <Grid ColumnDefinitions="Auto,16,*,Auto">
+                                <!-- Status Icon -->
+                                <Border Grid.Column="0"
+                                        Width="40" Height="40"
+                                        CornerRadius="20"
+                                        Background="{DynamicResource Layer1BackgroundBrush}"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="?"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextMutedBrush}"/>
+                                </Border>
+
+                                <!-- Service Info -->
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="4">
+                                    <TextBlock Text="{Binding ServiceName}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextBrush}"/>
+                                    <TextBlock Text="{Binding Message, TargetNullValue='Awaiting test...'}"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource TextMutedBrush}"/>
+                                </StackPanel>
+
+                                <!-- Test Button -->
+                                <Button Grid.Column="3"
+                                        Content="{x:Static strings:UIStrings+Labels.Test}"
+                                        Classes="function"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding $parent[ItemsControl].((vm:TestConnectionsViewModel)DataContext).TestSingleConnectionCommand}"
+                                        CommandParameter="{Binding}"
+                                        IsEnabled="{Binding !$parent[ItemsControl].((vm:TestConnectionsViewModel)DataContext).IsTesting}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Info Panel -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource Layer2BackgroundBrush}"
+                CornerRadius="8"
+                Padding="16"
+                Margin="0,16,12,0">
+            <StackPanel Orientation="Horizontal" Spacing="24">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="12" Height="12" CornerRadius="6" Background="#22C55E"/>
+                    <TextBlock Text="{x:Static strings:UIStrings+Status.Connected}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="12" Height="12" CornerRadius="6" Background="#EF4444"/>
+                    <TextBlock Text="{x:Static strings:UIStrings+Status.Failed}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="12" Height="12" CornerRadius="6" Background="#6B7280"/>
+                    <TextBlock Text="{x:Static strings:UIStrings+Status.Pending}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="12" Height="12" CornerRadius="6" Background="#F59E0B"/>
+                    <TextBlock Text="{x:Static strings:UIStrings+Status.Testing}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

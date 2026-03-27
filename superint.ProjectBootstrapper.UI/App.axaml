@@ -1,0 +1,17 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:superint.ProjectBootstrapper.UI"
+             x:Class="superint.ProjectBootstrapper.UI.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://superint.ProjectBootstrapper.UI/Styles/Themes/Fluent.axaml" />
+        <StyleInclude Source="avares://superint.ProjectBootstrapper.UI/Styles/Styles.axaml" />
+    </Application.Styles>
+
+</Application>

@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels"
+             xmlns:controls="using:superint.ProjectBootstrapper.UI.Controls"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="superint.ProjectBootstrapper.UI.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header -->
+        <TextBlock Grid.Row="0"
+                   Text="{x:Static strings:UIStrings+Sections.Dashboard}"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextBrush}"
+                   Margin="0,0,12,24"/>
+
+        <!-- Server Cards -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,16,*" Margin="0,0,12,0">
+            <!-- STG Server Card -->
+            <controls:ServerStatusCard Grid.Column="0"
+                                        ServerName="{x:Static strings:UIStrings+Environments.Staging}"
+                                        ServerTitle="{x:Static strings:UIStrings+Environments.StagingFull}"
+                                        BadgeColor="#3B82F6"
+                                        Status="{Binding StgStatus}"
+                                        CpuUsage="{Binding StgCpuUsage}"
+                                        MemoryUsage="{Binding StgMemoryUsage}"
+                                        DiskUsage="{Binding StgDiskUsage}"
+                                        CpuDetails="{Binding StgCpuDetails}"
+                                        MemoryDetails="{Binding StgMemoryDetails}"
+                                        DiskDetails="{Binding StgDiskDetails}"
+                                        Uptime="{Binding StgUptime}"/>
+
+            <!-- PRD Server Card -->
+            <controls:ServerStatusCard Grid.Column="2"
+                                        ServerName="{x:Static strings:UIStrings+Environments.Production}"
+                                        ServerTitle="{x:Static strings:UIStrings+Environments.ProductionFull}"
+                                        BadgeColor="#EF4444"
+                                        Status="{Binding PrdStatus}"
+                                        CpuUsage="{Binding PrdCpuUsage}"
+                                        MemoryUsage="{Binding PrdMemoryUsage}"
+                                        DiskUsage="{Binding PrdDiskUsage}"
+                                        CpuDetails="{Binding PrdCpuDetails}"
+                                        MemoryDetails="{Binding PrdMemoryDetails}"
+                                        DiskDetails="{Binding PrdDiskDetails}"
+                                        Uptime="{Binding PrdUptime}"/>
+        </Grid>
+    </Grid>
+</UserControl>

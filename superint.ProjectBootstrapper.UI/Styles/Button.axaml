@@ -1,0 +1,105 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Action Button (Primary) -->
+  <Style Selector="Button.action">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="{DynamicResource ActionButtonPadding}" />
+    <Setter Property="Background" Value="{DynamicResource ActionButtonBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource ActionButtonForegroundColor}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.action:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ActionButtonPointerOverBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource ActionButtonPointerOverForegroundColor}" />
+  </Style>
+  <Style Selector="Button.action:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ActionButtonPressedBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource ActionButtonPressedForegroundColor}" />
+  </Style>
+  <Style Selector="Button.action:disabled /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ActionButtonDisabledBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource ActionButtonDisabledForegroundColor}" />
+  </Style>
+
+  <!-- Function Button (Secondary) -->
+  <Style Selector="Button.function">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Padding" Value="{DynamicResource FunctionButtonPadding}" />
+    <Setter Property="Background" Value="{DynamicResource FunctionButtonBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource FunctionButtonForegroundColor}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+  </Style>
+  <Style Selector="Button.function:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource FunctionButtonPointerOverBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource FunctionButtonPointerOverForegroundColor}" />
+  </Style>
+  <Style Selector="Button.function:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource FunctionButtonPressedBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource FunctionButtonPressedForegroundColor}" />
+  </Style>
+  <Style Selector="Button.function:disabled /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource FunctionButtonDisabledBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource FunctionButtonDisabledForegroundColor}" />
+  </Style>
+
+  <!-- Transparent Function Button -->
+  <Style Selector="Button.transparentFunction">
+    <Setter Property="Padding" Value="{DynamicResource FunctionButtonPadding}" />
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextForegroundColor}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.transparentFunction:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPointerOverBackgroundColor}" />
+  </Style>
+  <Style Selector="Button.transparentFunction:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPressedBackgroundColor}" />
+  </Style>
+
+  <!-- Invisible Button -->
+  <Style Selector="Button.invisible">
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.invisible:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPointerOverBackgroundColor}" />
+  </Style>
+  <Style Selector="Button.invisible:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource InvisibleButtonPressedBackgroundColor}" />
+  </Style>
+
+  <!-- Plain Button -->
+  <Style Selector="Button.plain">
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <!-- Danger Button -->
+  <Style Selector="Button.danger">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="{DynamicResource ActionButtonPadding}" />
+    <Setter Property="Background" Value="{DynamicResource DismissColor}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#EE5555" />
+  </Style>
+  <Style Selector="Button.danger:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="#CC3333" />
+  </Style>
+
+</Styles>

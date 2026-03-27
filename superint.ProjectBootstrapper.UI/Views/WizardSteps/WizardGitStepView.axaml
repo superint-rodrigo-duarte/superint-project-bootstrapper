@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:superint.ProjectBootstrapper.UI.ViewModels.WizardSteps"
+             xmlns:strings="using:superint.ProjectBootstrapper.UI.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+             x:Class="superint.ProjectBootstrapper.UI.Views.WizardSteps.WizardGitStepView"
+             x:DataType="vm:WizardGitStepViewModel">
+
+    <StackPanel Spacing="16">
+        <!-- Header with Toggle -->
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{x:Static strings:UIStrings+WizardFields.GitRepository}"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextBrush}"/>
+            <ToggleSwitch Grid.Column="1"
+                          IsChecked="{Binding IsEnabled}"
+                          OnContent="{x:Static strings:UIStrings+Labels.Create}"
+                          OffContent="{x:Static strings:UIStrings+Labels.Skip}"/>
+        </Grid>
+
+        <!-- ═══ Create Repo Section (when Git is ENABLED) ═══ -->
+        <StackPanel Spacing="12" IsVisible="{Binding ShowCreateRepoSection}">
+            <!-- Namespace + Repo Name (single repo) -->
+            <Grid ColumnDefinitions="*,16,*" IsVisible="{Binding IsSingleRepo}">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="Namespace / Organization" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding GitNamespace}" Watermark="e.g., superint-ai"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="4">
+                    <TextBlock Text="Repository Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding GitRepoName}" Watermark="e.g., my-project"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Preview (single repo) -->
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12"
+                    IsVisible="{Binding IsSingleRepo}">
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas">
+                    <Run Text="Repository: " Foreground="{DynamicResource TextMutedBrush}"/>
+                    <Run Text="{Binding RepoPreview}"/>
+                </TextBlock>
+            </Border>
+
+            <!-- Fullstack: Namespace + editable backend/frontend names -->
+            <StackPanel Spacing="12" IsVisible="{Binding IsFullstack}">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Namespace / Organization" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    <TextBox Text="{Binding GitNamespace}" Watermark="e.g., superint-ai"/>
+                </StackPanel>
+                <Grid ColumnDefinitions="*,16,*">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Backend Repository Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBox Text="{Binding BackendRepoName}" Watermark="e.g., my-project-backend"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Spacing="4">
+                        <TextBlock Text="Frontend Repository Name" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBox Text="{Binding FrontendRepoName}" Watermark="e.g., my-project-frontend"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Preview (fullstack) -->
+                <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="12">
+                    <StackPanel Spacing="2">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas">
+                            <Run Text="Backend:  " Foreground="{DynamicResource TextMutedBrush}"/>
+                            <Run Text="{Binding BackendRepoPreview}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas">
+                            <Run Text="Frontend: " Foreground="{DynamicResource TextMutedBrush}"/>
+                            <Run Text="{Binding FrontendRepoPreview}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <CheckBox Content="Initialize with README"
+                      IsChecked="{Binding InitializeWithReadme}"/>
+        </StackPanel>
+
+        <!-- ═══ Existing Repository Section (when Git is DISABLED) ═══ -->
+        <StackPanel Spacing="12" IsVisible="{Binding ShowExistingRepoSection}">
+            <Border Background="{DynamicResource Layer1BackgroundBrush}" CornerRadius="8" Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Use Existing Repository (Optional)" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock Text="Git repository creation is disabled. You can optionally provide the existing repository URLs below."
+                               FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap"/>
+
+                    <!-- Single repo URL -->
+                    <StackPanel Spacing="4" IsVisible="{Binding IsSingleRepo}">
+                        <TextBlock Text="Repository URL" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBox Text="{Binding GitRepoUrl}" Watermark="https://github.com/org/repo.git (optional)"/>
+                    </StackPanel>
+
+                    <!-- Fullstack: separate URLs -->
+                    <Grid ColumnDefinitions="*,16,*" IsVisible="{Binding IsFullstack}">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Backend Repository URL" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding BackendGitUrl}" Watermark="(optional)"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Frontend Repository URL" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBox Text="{Binding FrontendGitUrl}" Watermark="(optional)"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

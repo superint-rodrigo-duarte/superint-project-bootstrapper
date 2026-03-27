@@ -1,0 +1,31 @@
+name: {{ deploy_folder_name }}
+
+networks:
+  {{ network_name }}:
+    external: true
+    driver: bridge
+
+services:
+  frontend:
+    image: {{ container_registry_url }}/{{ registry_path_frontend }}:latest
+    container_name: {{ container_name_frontend }}
+    restart: unless-stopped
+    labels:
+      - "ReverseProxy.enable=true"
+      - "ReverseProxy.http.routers.{{ container_name_frontend }}.rule=Host(`{{ ReverseProxy_host }}`) && PathPrefix(`{{ ReverseProxy_path_prefix }}`)"
+      - "ReverseProxy.http.routers.{{ container_name_frontend }}.entrypoints={{ ReverseProxy_entrypoint }}"
+{{- if is_production }}
+      - "ReverseProxy.http.routers.{{ container_name_frontend }}.tls=true"
+{{- end }}
+      - "ReverseProxy.http.services.{{ container_name_frontend }}.loadbalancer.server.scheme=http"
+      - "ReverseProxy.http.services.{{ container_name_frontend }}.loadbalancer.server.port={{ frontend_port }}"
+      - "ReverseProxy.http.services.{{ container_name_frontend }}.loadbalancer.serversTransport=insecure@file"
+      - "ReverseProxy.http.middlewares.{{ container_name_frontend }}-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+{{- if use_strip_prefix_frontend }}
+      - "ReverseProxy.http.middlewares.{{ container_name_frontend }}-strip-prefix.stripprefix.prefixes={{ ReverseProxy_path_prefix }}"
+      - "ReverseProxy.http.routers.{{ container_name_frontend }}.middlewares={{ container_name_frontend }}-headers@docker,{{ container_name_frontend }}-strip-prefix@docker,compression@file,file-limits@file"
+{{- else }}
+      - "ReverseProxy.http.routers.{{ container_name_frontend }}.middlewares={{ container_name_frontend }}-headers@docker,compression@file,file-limits@file"
+{{- end }}
+    networks:
+      - {{ network_name }}
